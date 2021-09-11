@@ -5,7 +5,6 @@ from abc import ABC, abstractmethod
 import wget
 import os,pkg_resources
 import zipfile
-import requests
 
 _init_location = pkg_resources.resource_filename(__name__,'__init__.py')
 _module_dir_path = os.path.dirname(_init_location)
