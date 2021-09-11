@@ -74,8 +74,12 @@ class SearchInContext(TagReconstruct):
     """
     def filter_tag_is_substring_of_results(self,tag,results):
         outs = []
-        for result in results:            
-            if tag in result:
+        for result in results:
+            is_char_all_appear_in_result = True
+            for t in tag:
+                if t not in result:
+                    is_char_all_appear_in_result = False
+            if is_char_all_appear_in_result:
                 outs.append(result)
         return outs
                 
