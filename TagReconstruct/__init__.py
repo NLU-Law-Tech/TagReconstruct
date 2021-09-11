@@ -13,7 +13,7 @@ class TagReconstruct(ABC):
     def __init__(self,align_dict_path):
         self._dict_file_path = os.path.join(_module_dir_path,'list')
         if not os.path.isdir(self._dict_file_path):
-            logger.warning("Starting download data, please do not interrupt.")
+            logger.warning("Start download data, ** do not interrupt. **")
             os.makedirs(self._dict_file_path,exist_ok=True)
             self._download_file('https://github.com/NLU-Law-Tech/TagReconstruct/releases/download/list-v1.1/list.zip','list.zip')
             with zipfile.ZipFile(os.path.join(_module_dir_path,'list/list.zip'), 'r') as zip_ref:
