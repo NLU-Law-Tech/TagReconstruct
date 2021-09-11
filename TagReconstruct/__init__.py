@@ -45,25 +45,16 @@ class TagReconstruct(ABC):
             max_len = len(context)
         combination_results = []
         for i in range(min_len,max_len+1):
-            combination_len = i
-            results = list(combinations(context,combination_len))
-            results = list(map(lambda x:''.join(x),results))
-            combination_results += results
+            combination_len = i  
+
+            for result in combinations(context,combination_len):
+                result = ''.join(result)
+                if result in self.align_dict:
+                    combination_results.append(result)
+        # Sort by length (longest first)
+        combination_results = sorted(combination_results,key=lambda x:-1*len(x))
         return combination_results
 
-    def list_and_sort_in_dict_results(self,combination_results):
-        """
-        列出並且排序(依照結果長度 大->小)所有存在`align_dict`的結果
-        """
-        appear_in_dict_results = []
-        for combination_result in combination_results:
-            if combination_result in self.align_dict:
-                appear_in_dict_results.append(combination_result)
-        
-        # Sort by length (longest first)
-        appear_in_dict_results = sorted(appear_in_dict_results,key=lambda x:-1*len(x))
-        return appear_in_dict_results
-            
     @abstractmethod    
     def run(self):
         pass
@@ -85,12 +76,10 @@ class SearchInContext(TagReconstruct):
                 
     def run(self,context,tag,bound=5):
         min_len = len(tag)-bound
-        if min_len <=0: min_len=1;
+        if min_len <=5: min_len=5;
         max_len = len(tag)+bound
-        
         combination_results = self.list_combination_results(context,min_len=min_len,max_len=max_len)
-        appear_in_dict_results = self.list_and_sort_in_dict_results(combination_results)
-        substring_of_results = self.filter_tag_is_substring_of_results(tag,appear_in_dict_results)
+        substring_of_results = self.filter_tag_is_substring_of_results(tag,combination_results)
         if len(substring_of_results) == 0:
             return tag
         return substring_of_results[0]
@@ -106,8 +95,7 @@ class SearchNearby(TagReconstruct):
         # 將tag範圍擴大
         new_context = context[start_at-bound:end_at+bound]
         combination_results = self.list_combination_results(new_context)
-        appear_in_dict_results = self.list_and_sort_in_dict_results(combination_results)
         
-        if len(appear_in_dict_results) == 0:
+        if len(combination_results) == 0:
             return tag
-        return appear_in_dict_results[0]
+        return combination_results[0]
