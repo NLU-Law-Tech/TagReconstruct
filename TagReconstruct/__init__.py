@@ -1,10 +1,42 @@
+#coding=UTF-8
 from itertools import combinations
 from loguru import logger
 from abc import ABC, abstractmethod
+import wget
+import os,pkg_resources
+import zipfile
+import requests
+
+_init_location = pkg_resources.resource_filename(__name__,'__init__.py')
+_module_dir_path = os.path.dirname(_init_location)
 
 class TagReconstruct(ABC):
-    def __init__(self,align_dict):
-        self.align_dict = align_dict
+    def __init__(self,align_dict_path):
+        self._dict_file_path = os.path.join(_module_dir_path,'list')
+        if not os.path.isdir(self._dict_file_path):
+            logger.warning("Starting download data, please do not interrupt.")
+            os.makedirs(self._dict_file_path,exist_ok=True)
+            self._download_file('https://github.com/NLU-Law-Tech/TagReconstruct/releases/download/list-v1.1/list.zip','list.zip')
+            with zipfile.ZipFile(os.path.join(_module_dir_path,'list/list.zip'), 'r') as zip_ref:
+                zip_ref.extractall(os.path.join(_module_dir_path,'list'))
+        if os.path.exists(align_dict_path):
+            pass
+        else:
+            align_dict_path = os.path.join(_module_dir_path,'list',align_dict_path)
+        
+        # load dict
+        with open(align_dict_path,'r',encoding='utf-8') as f:
+            _list = f.read().strip().split()
+        
+        # create dict
+        self.align_dict = {}
+        for key in _list:
+            self.align_dict[key] = None
+        
+        logger.info("Create align_dict successful. Size: %d"%len(self.align_dict))
+
+    def _download_file(self,url,f_name):
+        wget.download(url,os.path.join(self._dict_file_path,f_name))
     
     def list_combination_results(self,context,min_len=1,max_len=None):
         """
