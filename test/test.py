@@ -24,10 +24,10 @@ class TestTagReconstruct(unittest.TestCase):
         new_tag = searchInContext.run(context=context,tag='華實公司',bound=10)
         self.assertEqual(new_tag,"華新行實業股份有限公司")
     
-    # def test_SearchInContext_b(self):
-    #     context = "這是一段干擾這是一段干擾這是一段干擾華新行實業股份有限公司下稱華實公司這這是一段干擾這是一段干擾這是一段干擾"
-    #     new_tag = searchInContext.run(context=context,tag='華實公司',bound=10)
-    #     self.assertEqual(new_tag,"華新行實業股份有限公司")  
+    def test_SearchInContext_b(self):
+        context = "這是一段干擾這是一段干擾華新行實業股份有限公司下稱華實公司這這是一段干擾這是一段干擾華實公司"
+        new_tag = searchInContext.run(context=context,tag='華實公司',bound=10)
+        self.assertEqual(new_tag,"華新行實業股份有限公司")  
 
 if __name__ == '__main__':
     unittest.main()
