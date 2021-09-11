@@ -12,22 +12,22 @@
 依照位置擴大搜尋可能的邊界範圍，不可以處理跨段
 > 適用：身份、職稱
 ```python
-context = """
-王小明是公司實際負責人
-"""
-search = SearchNearby('position_list.txt')
-new_tag = search.run(context=context,start_at=9,end_at=12,bound=3)
-print(context[9:12],new_tag) # 負責人, 實際負責人
+searchNearby = SearchNearby('position_list.txt')
+context = "王小明是公司實際負責人"
+new_tag = searchNearby.run(context=context,start_at=9,end_at=12,bound=3)
+# 實際負責人
 ```
 
 ### SearchInContext
 依照提示在內文中搜尋，可以處理跨段
 > 適用：單位
 ```python
-context = """
-炎隆鐵工廠有限公司下稱炎隆
-"""
-search = SearchInContext('company_list.txt')
-new_tag = search.run(context=context,tag='炎隆',bound=10)
-print(new_tag) # 炎隆鐵工廠有限公司
+searchInContext = SearchInContext('company_list.txt')
+context = "炎隆鐵工廠有限公司下稱炎隆"
+new_tag = searchInContext.run(context=context,tag='炎隆',bound=10)
+# 炎隆鐵工廠有限公司     
+
+context = "華新行實業股份有限公司下稱華實公司"
+new_tag = searchInContext.run(context=context,tag='華實公司',bound=10)
+# 華新行實業股份有限公司
 ```
