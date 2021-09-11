@@ -1,5 +1,12 @@
 # TagReconstruct
 依據字典重建標記結果；原始流程選取機率最高作為輸出，並且過濾不合理輸出，然而不能保證輸出符合正規劃期望。
+
+## 內建清單
+首次初始化會下載一些內建清單，也可自己指定
+- `company_list.txt`
+- `identity_list.txt`
+- `position_list.txt`
+
 ## 策略
 ### SearchNearby
 依照位置擴大搜尋可能的邊界範圍，不可以處理跨段
