@@ -20,6 +20,5 @@ setuptools.setup(
     install_requires = [
         'loguru',
         'wget',
-        'zipfile'
     ]
 )
