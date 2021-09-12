@@ -74,7 +74,7 @@ class SearchInContext(TagReconstruct):
                 outs.append(result)
         return outs
                 
-    def run(self,context,tag,bound=5,max_look_ahead=20,max_look_back=15):
+    def run(self,context,tag,bound=5,max_look_ahead=20,max_look_back=20):
         min_len = len(tag)-bound
         if min_len <=5: min_len=5;
         max_len = len(tag)+bound
