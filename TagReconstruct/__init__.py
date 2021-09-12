@@ -107,9 +107,10 @@ class SearchNearby(TagReconstruct):
     """
     嘗試在tag周圍尋找
     """
-    def run(self,context,start_at,end_at,bound):
+    def run(self,context,start_at,end_at,bound,tag=None):
         assert start_at <= end_at,'start_at must smaller than end_at'
-        tag = context[start_at:end_at]
+        if tag is None:
+            tag = context[start_at:end_at]
         # 將tag範圍擴大
         new_context = context[start_at-bound:end_at+bound]
         combination_results = self.list_combination_results(new_context)
