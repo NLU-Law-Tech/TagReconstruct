@@ -54,16 +54,8 @@ class TagReconstruct(ABC):
         # Sort by length (longest first)
         combination_results = sorted(combination_results,key=lambda x:-1*len(x))
         return combination_results
-
-    @abstractmethod    
-    def run(self):
-        pass
-
-class SearchInContext(TagReconstruct):
-    """
-    嘗試在內文中尋找
-    """
-    def filter_tag_is_substring_of_results(self,tag,results):
+    
+    def filter_tag_is_subset_of_results(self,tag,results):
         outs = []
         for result in results:
             is_char_all_appear_in_result = True
@@ -73,7 +65,15 @@ class SearchInContext(TagReconstruct):
             if is_char_all_appear_in_result:
                 outs.append(result)
         return outs
-                
+
+    @abstractmethod    
+    def run(self):
+        pass
+
+class SearchInContext(TagReconstruct):
+    """
+    嘗試在內文中尋找
+    """         
     def run(self,context,tag,bound=5,max_look_ahead=20,max_look_back=20):
         min_len = len(tag)-bound
         if min_len <=5: min_len=5;
@@ -87,13 +87,13 @@ class SearchInContext(TagReconstruct):
         if _new_context_start_at <0: _new_context_start_at = 0;
         _context = context[_new_context_start_at:tag_start_at]
         combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
-        substring_of_results += self.filter_tag_is_substring_of_results(tag,combination_results)
+        substring_of_results += self.filter_tag_is_subset_of_results(tag,combination_results)
         
         # 往後找找
         _new_context_end_at = tag_start_at+max_look_back
         _context = context[tag_start_at:_new_context_end_at]
         combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
-        substring_of_results += self.filter_tag_is_substring_of_results(tag,combination_results)
+        substring_of_results += self.filter_tag_is_subset_of_results(tag,combination_results)
 
         # 依照長度排序
         substring_of_results = sorted(substring_of_results,key=lambda x:-1*len(x))
@@ -114,6 +114,7 @@ class SearchNearby(TagReconstruct):
         # 將tag範圍擴大
         new_context = context[start_at-bound:end_at+bound]
         combination_results = self.list_combination_results(new_context)
+        combination_results = self.filter_tag_is_subset_of_results(tag,combination_results)
         
         if len(combination_results) == 0:
             return tag
