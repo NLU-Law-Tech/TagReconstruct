@@ -80,27 +80,27 @@ class SearchInContext(TagReconstruct):
         max_len = len(tag)+bound
         # 先找到tag第一次出現的地方
         tag_start_at = context.index(tag)
-        substring_of_results = []
+        outs = []
         
         # 往前找找
         _new_context_start_at = tag_start_at-max_look_ahead
         if _new_context_start_at <0: _new_context_start_at = 0;
         _context = context[_new_context_start_at:tag_start_at]
         combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
-        substring_of_results += self.filter_tag_is_subset_of_results(tag,combination_results)
+        outs += self.filter_tag_is_subset_of_results(tag,combination_results)
         
         # 往後找找
         _new_context_end_at = tag_start_at+max_look_back
         _context = context[tag_start_at:_new_context_end_at]
         combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
-        substring_of_results += self.filter_tag_is_subset_of_results(tag,combination_results)
+        outs += self.filter_tag_is_subset_of_results(tag,combination_results)
 
         # 依照長度排序
-        substring_of_results = sorted(substring_of_results,key=lambda x:-1*len(x))
+        outs = sorted(outs,key=lambda x:-1*len(x))
         
-        if len(substring_of_results) == 0:
+        if len(outs) == 0:
             return tag
-        return substring_of_results[0]
+        return outs[0]
 
 
 class SearchNearby(TagReconstruct):
