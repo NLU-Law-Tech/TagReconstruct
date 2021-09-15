@@ -113,7 +113,7 @@ class SearchNearby(TagReconstruct):
             tag = context[start_at:end_at]
         # 將tag範圍擴大
         new_context = context[start_at-bound:end_at+bound]
-        combination_results = self.list_combination_results(new_context)
+        combination_results = self.list_combination_results(new_context,min_len=len(tag),max_len=len(tag)+8)
         combination_results = self.filter_tag_is_subset_of_results(tag,combination_results)
         
         if len(combination_results) == 0:
