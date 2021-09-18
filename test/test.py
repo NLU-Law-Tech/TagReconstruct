@@ -37,6 +37,26 @@ class TestTagReconstruct(unittest.TestCase):
         context = "這是一段干擾這是一段干擾華新行實業股份有限公司下稱華實公司這這是一段干擾這是一段干擾華實公司"
         new_tag = searchInContext.run(context=context,tag='華實公司',bound=10)
         self.assertEqual(new_tag,"華新行實業股份有限公司")  
+    
+    def test_SearchInContext_d(self):
+        context = """
+        陶緣海係址設臺北市○○區○○街000號5樓之數位點子多媒
+        體股份有限公司（下稱數位點子公司）下線經銷商，從事行
+        動電話預付卡行銷業務
+        """
+        context = context.replace("\n","").replace(" ","")
+        new_tag = searchInContext.run(context=context,tag='多媒體股份有限公司123',bound=10)
+        self.assertEqual(new_tag,"多媒體股份有限公司123")
+    
+    def test_SearchInContext_e(self):
+        context = """
+        陶緣海係址設臺北市○○區○○街000號5樓之數位點子多媒
+        體股份有限公司（下稱數位點子公司）下線經銷商，從事行
+        動電話預付卡行銷業務
+        """
+        context = context.replace("\n","").replace(" ","")
+        new_tag = searchInContext.run(context=context,tag='多媒體股份有限公司',bound=10)
+        self.assertEqual(new_tag,"數位點子多媒體股份有限公司")  
 
 if __name__ == '__main__':
     unittest.main()
