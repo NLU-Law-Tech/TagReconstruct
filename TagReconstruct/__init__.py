@@ -93,12 +93,24 @@ class SearchInContext(TagReconstruct):
         combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
         outs += self.filter_tag_is_subset_of_results(tag,combination_results)
         
-        # 往後找找
-        _new_context_end_at = tag_start_at+max_look_back
-        _context = context[tag_start_at:_new_context_end_at]
-        combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
-        outs += self.filter_tag_is_subset_of_results(tag,combination_results)
+        # 當往前沒有找到，往後找找
+        if len(outs) == 0:
+            _new_context_end_at = tag_start_at+max_look_back
+            _context = context[tag_start_at:_new_context_end_at]
+            combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
+            outs += self.filter_tag_is_subset_of_results(tag,combination_results)
 
+        # 當往前、往後都沒有找到，以自身為中心，附近找找
+        if len(outs) == 0:
+            _bound = bound
+            if bound >10:
+                _bound = 10
+                logger.warning(f"bound({bound}) is to large, force set to ({_bound})") # ** bound過大會導致組合爆炸 **
+                
+            _context = context[tag_start_at-_bound:tag_start_at+_bound]
+            combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
+            outs += self.filter_tag_is_subset_of_results(tag,combination_results)
+        
         # 依照長度排序
         outs = sorted(outs,key=lambda x:-1*len(x))
         
