@@ -79,7 +79,11 @@ class SearchInContext(TagReconstruct):
         if min_len <=5: min_len=5;
         max_len = len(tag)+bound
         # 先找到tag第一次出現的地方
-        tag_start_at = context.index(tag)
+        try:
+            tag_start_at = context.index(tag)
+        except Exception as e:
+            logger.warning(e)
+            return tag
         outs = []
         
         # 往前找找
