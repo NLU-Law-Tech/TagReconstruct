@@ -16,6 +16,7 @@ class TagReconstruct(ABC):
             logger.warning("Start download data, ** do not interrupt. **")
             os.makedirs(self._dict_file_path,exist_ok=True)
             self._download_file('https://github.com/NLU-Law-Tech/TagReconstruct/releases/download/list-v1.1.2/list.zip','list.zip')
+            self._download_file('https://github.com/NLU-Law-Tech/unit-crawler/releases/download/latest/unit_list.txt','unit_list.txt')
             with zipfile.ZipFile(os.path.join(_module_dir_path,'list/list.zip'), 'r') as zip_ref:
                 zip_ref.extractall(os.path.join(_module_dir_path,'list'))
         if os.path.exists(align_dict_path):
