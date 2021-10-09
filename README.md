@@ -3,6 +3,7 @@
 
 ## 內建清單
 首次初始化會下載一些內建清單，也可自己指定
+- `unit_list.txt`(公司+公部門，每月更新)
 - `company_list.txt`
 - `identity_list.txt`
 - `position_list.txt`
