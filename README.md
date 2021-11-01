@@ -8,6 +8,11 @@
 - `identity_list.txt`
 - `position_list.txt`
 
+## 安裝
+```
+pip install -U git+https://github.com/NLU-Law-Tech/TagReconstruct.git
+```
+
 ## 策略
 ### SearchNearby
 依照位置擴大搜尋可能的邊界範圍，不可以處理跨段
