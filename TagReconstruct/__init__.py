@@ -38,6 +38,19 @@ class TagReconstruct(ABC):
     def _download_file(self,url,f_name):
         wget.download(url,os.path.join(self._dict_file_path,f_name))
     
+    def combination_generator(self,context,max_length=3):
+        context += " "
+        for i,c1 in enumerate(context):
+            for j,c2 in enumerate(context):
+                if j<=i:
+                    continue
+                tag = context[i:j].strip()
+                if len(tag) >=max_length:
+                    yield(tag)
+                else:
+                    continue
+            
+
     def list_combination_results(self,context,min_len=1,max_len=None):
         """
         對context做組合，列出所有可能
@@ -45,15 +58,14 @@ class TagReconstruct(ABC):
         if max_len is None:
             max_len = len(context)
         combination_results = []
-        for i in range(min_len,max_len+1):
-            combination_len = i  
-            for result in combinations(context,combination_len):
-                # print(result,end='\r')
-                result = ''.join(result)
-                if result in self.align_dict:
-                    combination_results.append(result)
+       
+        for result in self.combination_generator(context):
+            # logger.debug(result)
+            if result in self.align_dict:
+                combination_results.append(result)
         # Sort by length (longest first)
         combination_results = sorted(combination_results,key=lambda x:-1*len(x))
+        # logger.debug(combination_results)
         return combination_results
     
     def filter_tag_is_subset_of_results(self,tag,results):
@@ -104,9 +116,9 @@ class SearchInContext(TagReconstruct):
         # 當往前、往後都沒有找到，以自身為中心，附近找找
         if len(outs) == 0:
             _bound = bound
-            if bound >10:
-                _bound = 10
-                logger.warning(f"bound({bound}) is to large, force set to ({_bound})") # ** bound過大會導致組合爆炸 **
+            # if bound >20:
+            #     _bound = 10
+            #     logger.warning(f"bound({bound}) is to large, force set to ({_bound})") # ** bound過大會導致組合爆炸 **
                 
             _context = context[tag_start_at-_bound:tag_start_at+_bound]
             combination_results = self.list_combination_results(_context,min_len=min_len,max_len=max_len)
